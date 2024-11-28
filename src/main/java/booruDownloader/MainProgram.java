@@ -2,21 +2,30 @@ package booruDownloader;
 
 import java.util.List;
 
+import booruCLI.CommandLine;
+
 public class MainProgram {
 
+	private static long startExecTimeMilis;
 	private static BooruManager booruManager;
 
 	public static void main(String[] args) {
+		startExecTimeMilis = System.currentTimeMillis();
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-			booruManager.onFinishedInterpretingQuery();
+			if (booruManager != null)
+				booruManager.onFinishedInterpretingQuery();
 			BooruDownloader.onProgramShutdown();
 			BooruDownloader.printFailedDownloads();
 		}));
-		downloadBoorus();
+
+		// Handle CLI
+		if (args.length > 0)
+			CommandLine.handle(args);
+		else
+			downloadBoorus(QueriesFileParser.parseConfigFile());
 	}
 
-	public static void downloadBoorus() {
-		List<BooruQueries> boorusQueries = QueriesFileParser.parseConfigFile();
+	public static void downloadBoorus(List<BooruQueries> boorusQueries) {
 		for (BooruQueries booruQueries : boorusQueries) {
 			String booru = booruQueries.getBooruURL();
 			List<Query> queries = booruQueries.getBooruQueries();
@@ -36,7 +45,8 @@ public class MainProgram {
 			System.out.println();
 		}
 
-		System.out.println("All downloads finished");
+		System.out.printf("All downloads finished. (took %o sec)%n",
+				(System.currentTimeMillis() - startExecTimeMilis) / 1000);
 		BooruDownloader.onProgramShutdown();
 	}
 

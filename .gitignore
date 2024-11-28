@@ -89,4 +89,10 @@ nb-configuration.xml
 ##############################
 ## Miscellaneous
 ##############################
+*/cache
 *.log
+*.jpg
+*.png
+*.jpeg
+*.txt
+*.mp4

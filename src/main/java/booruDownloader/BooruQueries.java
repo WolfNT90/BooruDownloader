@@ -13,12 +13,18 @@ public class BooruQueries {
 		this.QUERIES = new ArrayList<Query>();
 	}
 
-	public void addQuery(Query query) {
+	/**
+	 * Adds a {@link Query} to this {@link BooruQueries} object.
+	 * 
+	 * @return itself, for chaining.
+	 */
+	public BooruQueries addQuery(Query query) {
 		if (QUERIES.contains(query)) {
-			return;
+			return this;
 		}
 
 		QUERIES.add(query);
+		return this;
 	}
 
 	@Override
